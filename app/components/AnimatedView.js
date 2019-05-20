@@ -15,6 +15,7 @@ export default class AnimatedView extends Component {
     }
   }
 
+  /* 生成新的数字或数字叠加之后格子自身的动画 */
   startBoxAnimate = (x, y) => {
     const position = getPosition(x, y, gridWidth)
     const { left, top, width, height } = this.state
@@ -28,38 +29,47 @@ export default class AnimatedView extends Component {
           toValue: position.top + gridWidth / 2,
           duration: 0,
         }),
+        Animated.timing(width,{
+          toValue: 0,
+          duration: 0,
+        }),
+        Animated.timing(height,{
+          toValue: 0,
+          duration: 0,
+        }),
       ]),
       Animated.parallel([
         Animated.timing(width,{
           toValue: gridWidth,
-          duration: 50,
+          duration: 30,
         }),
         Animated.timing(height,{
           toValue: gridWidth,
-          duration: 50,
+          duration: 30,
         }),
         Animated.timing(left,{
           toValue: position.left,
-          duration: 50,
+          duration: 30,
         }),
         Animated.timing(top,{
           toValue: position.top,
-          duration: 50,
+          duration: 30,
         })
       ])
     ]).start()
   }
 
-  startAnimate = (toX, toY) => {
+  /* 格子的移动动画 */
+  startMoveAnimate = (toX, toY) => {
     const position = getPosition(toX, toY, gridWidth)
     Animated.parallel([
       Animated.timing(this.state.left,{
         toValue: position.left,
-        duration: 50,
+        duration: 150,
       }),
       Animated.timing(this.state.top,{
         toValue: position.top,
-        duration: 50,
+        duration: 150,
       }),
     ]).start()
   }
@@ -74,8 +84,6 @@ export default class AnimatedView extends Component {
           top,
           width,
           height,
-          // width: value > 0 ? gridWidth : 0,
-          // height: value > 0 ? gridWidth : 0,
           backgroundColor:  value > 0 ? getNumBgColor(value) : '#ccc0b3',
         }]}
       >

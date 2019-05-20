@@ -18,6 +18,11 @@ const isGameOver = (board) => {
   if (noSpace(board) && noMove(board)) alert('GAME OVER !')
 }
 
+const getNumColor = (num) => {
+  if (num <= 4) return '#776e65'
+  return "white"
+}
+
 const getNumBgColor = (num) => {
   switch (num) {
     case 2: return "#eee4da"; break;
@@ -31,14 +36,9 @@ const getNumBgColor = (num) => {
     case 512: return "#9c0"; break;
     case 1024: return "#33b5e5"; break;
     case 2048: return "#09c"; break;
-    case 4069: return "#a6c"; break;
+    case 4096: return "#a6c"; break;
     case 8192: return "#93c"; break;
   }
-}
-
-const getNumColor = (num) => {
-  if (num <= 4) return '#776e65'
-  return "white"
 }
 
 const getPosition = (x, y, gridWidth) => {

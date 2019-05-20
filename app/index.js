@@ -32,6 +32,7 @@ export default class Main extends Component {
     }
     return bgGridEle
   }
+
   /* 生成有数字的格 */
   setValGrid = ()=> {
     const { board, hasConflicted } = this.state
@@ -54,8 +55,8 @@ export default class Main extends Component {
     })
   }
 
+  /* 初始化每个格子的数字为0，将总得分置为0 */
   init = ()=> {
-    /* 初始化每个格子的数字为0，将总得分置为0 */
     const { board, hasConflicted } = this.state
     for (let i = 0; i < 4; i++) {
       board[i] = []
@@ -66,15 +67,12 @@ export default class Main extends Component {
       }
     }
     this.setState({
-      board: []
-    }, () => {
-      this.setState({
-        score: 0,
-        board,
-        hasConflicted
-      })
+      score: 0,
+      board: board,
+      hasConflicted
     })
   }
+
   /* 在一个随机位置随机生成一个数字（2或4）*/
   generateOneNumber = () => {
     const { board } = this.state
@@ -104,25 +102,28 @@ export default class Main extends Component {
     /* 随机生成一个数字 */
     const randNum = Math.random() < 0.5 ? 2 : 4
     board[randX][randY] = randNum
-    const valCell = this.refs[`val-cell-${randX}-${randY}`]
-    valCell.startBoxAnimate(randX, randY)
     this.setState({
-      board
+      board: []
+    }, () => {
+      this.setState({
+        board
+      }, () => {
+        const valCell = this.refs[`val-cell-${randX}-${randY}`]
+        valCell.startBoxAnimate(randX, randY)
+        isGameOver(board)
+      })
     })
   }
 
   newGame = ()=> {
     this.init();
-    setTimeout(() => {
-      this.generateOneNumber()
-      this.generateOneNumber()
-    }, 50)
-
+    this.generateOneNumber()
+    this.generateOneNumber()
   }
 
   showMoveAnimation = (fromX, fromY, toX, toY) => {
     const valCell = this.refs[`val-cell-${fromX}-${fromY}`]
-    valCell.startAnimate(toX, toY)
+    valCell.startMoveAnimate(toX, toY)
   }
 
   updateBoardView = (score, board, hasConflicted) => {
@@ -130,15 +131,12 @@ export default class Main extends Component {
     setTimeout(() => {
       this.setState({
         score,
-        board: [],
+        board: boardNow,
         hasConflicted
+      }, () => {
+        this.generateOneNumber()
       })
-      this.setState({
-        board: boardNow
-      })
-      this.generateOneNumber()
-      isGameOver(board)
-    }, 60)
+    }, 150)
   }
 
   moveLeft = () => {
@@ -242,8 +240,8 @@ export default class Main extends Component {
     this.updateBoardView(score, board, hasConflicted)
   }
 
+  /* 添加手势响应 */
   componentWillMount() {
-    /* 添加手势 */
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponder: (evt, gestureState) => true,
       onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
