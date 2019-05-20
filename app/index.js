@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { View, TouchableHighlight, Text, PanResponder, StyleSheet, Dimensions } from 'react-native';
+import Sound from 'react-native-sound';
 import AnimatedView from './components/AnimatedView';
 import { noSpace, canMoveLeft, canMoveRight, canMoveUp, canMoveDown, noBlockHorizontal, noBlockVertical, isGameOver } from "./support";
 
+const music = require('./sounds/move.mp3')
 const SCREEN_WIDTH = Dimensions.get('window').width
 const gridWidth = (SCREEN_WIDTH - 88) / 4
 
@@ -124,6 +126,12 @@ export default class Main extends Component {
   showMoveAnimation = (fromX, fromY, toX, toY) => {
     const valCell = this.refs[`val-cell-${fromX}-${fromY}`]
     valCell.startMoveAnimate(toX, toY)
+    const s = new Sound(music, (e) => {
+      if(e) {
+        return;
+      }
+      s.play()
+    })
   }
 
   updateBoardView = (score, board, hasConflicted) => {
