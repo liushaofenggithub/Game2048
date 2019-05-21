@@ -287,7 +287,7 @@ export default class Main extends Component {
           this.moveRight()
         } else if (abX < abY && dy < 0) {
           this.moveUp()
-        } else {
+        } else if(abX < abY && dy > 0) {
           this.moveDown()
         }
       },
