@@ -4,7 +4,8 @@ import Sound from 'react-native-sound';
 import AnimatedView from './components/AnimatedView';
 import { noSpace, canMoveLeft, canMoveRight, canMoveUp, canMoveDown, noBlockHorizontal, noBlockVertical, isGameOver } from "./support";
 
-const music = require('./sounds/move.mp3')
+const move = require('./sounds/move.mp3')
+const merge = require('./sounds/merge.mp3')
 const SCREEN_WIDTH = Dimensions.get('window').width
 const gridWidth = (SCREEN_WIDTH - 88) / 4
 
@@ -126,17 +127,27 @@ export default class Main extends Component {
   showMoveAnimation = (fromX, fromY, toX, toY) => {
     const valCell = this.refs[`val-cell-${fromX}-${fromY}`]
     valCell.startMoveAnimate(toX, toY)
-    const s = new Sound(music, (e) => {
-      if(e) {
-        return;
-      }
-      s.play()
-    })
   }
 
-  updateBoardView = (score, board, hasConflicted) => {
+  updateBoardView = (score, board, hasConflicted, hasMerged) => {
     const boardNow = board
     setTimeout(() => {
+      if (hasMerged) {
+        const s = new Sound(move, (e) => {
+          if(e) {
+            return;
+          }
+          s.play()
+        })
+      } else {
+        const s = new Sound(merge, (e) => {
+          if(e) {
+            return;
+          }
+          s.play()
+        })
+      }
+
       this.setState({
         score,
         board: boardNow,
@@ -149,6 +160,7 @@ export default class Main extends Component {
 
   moveLeft = () => {
     let { score, board, hasConflicted } = this.state
+    let hasMerged = false
     if (!canMoveLeft(board)) return
     for (let i = 0; i < 4; i++) {
       for (let j = 1; j < 4; j++) {
@@ -164,17 +176,19 @@ export default class Main extends Component {
               board[i][j] = 0
               score += board[i][k]
               hasConflicted[i][k] = true
+              hasMerged = true
             }
           }
         }
 
       }
     }
-    this.updateBoardView(score, board, hasConflicted)
+    this.updateBoardView(score, board, hasConflicted, hasMerged)
   }
 
   moveRight = () => {
     let { score, board, hasConflicted } = this.state
+    let hasMerged = false
     if (!canMoveRight(board)) return
     for (let i = 0; i < 4; i++) {
       for (let j = 2; j >= 0; j--) {
@@ -190,16 +204,18 @@ export default class Main extends Component {
               board[i][j] = 0
               score += board[i][k]
               hasConflicted[i][k] = true
+              hasMerged = true
             }
           }
         }
       }
     }
-    this.updateBoardView(score, board, hasConflicted)
+    this.updateBoardView(score, board, hasConflicted, hasMerged)
   }
 
   moveUp = () => {
     let { score, board, hasConflicted } = this.state
+    let hasMerged = false
     if (!canMoveUp(board)) return
     for (let i = 1; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
@@ -215,16 +231,18 @@ export default class Main extends Component {
               board[i][j] = 0
               score += board[k][j]
               hasConflicted[k][j] = true
+              hasMerged = true
             }
           }
         }
       }
     }
-    this.updateBoardView(score, board, hasConflicted)
+    this.updateBoardView(score, board, hasConflicted, hasMerged)
   }
 
   moveDown = () => {
     let { score, board, hasConflicted } = this.state
+    let hasMerged = false
     if (!canMoveDown(board)) return
     for (let i = 2; i >= 0; i--) {
       for (let j = 0; j < 4; j++) {
@@ -240,12 +258,13 @@ export default class Main extends Component {
               board[i][j] = 0
               score += board[k][j]
               hasConflicted[k][j] = true
+              hasMerged = true
             }
           }
         }
       }
     }
-    this.updateBoardView(score, board, hasConflicted)
+    this.updateBoardView(score, board, hasConflicted, hasMerged)
   }
 
   /* 添加手势响应 */
