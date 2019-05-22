@@ -156,6 +156,7 @@ export default class Main extends Component {
     setTimeout(() => {
       if (hasMerged) {
         const s = new Sound(move, (e) => {
+          alert(JSON.stringify(e))
           if(e) {
             return;
           }
@@ -163,6 +164,7 @@ export default class Main extends Component {
         })
       } else {
         const s = new Sound(merge, (e) => {
+          alert(JSON.stringify(e))
           if(e) {
             return;
           }
@@ -324,18 +326,18 @@ export default class Main extends Component {
         Alert.alert('提示', '您的应用版本已更新,请前往应用商店下载新的版本', [
           {text: '确定', onPress: ()=>{info.downloadUrl && Linking.openURL(info.downloadUrl)}},
         ]);
-      } else if (info.update) {
+      } else if (info.upToDate) {
+        // Alert.alert('提示', '您的应用版本已是最新.');
+      } else {
         Alert.alert('提示', '检查到新的版本'+info.name+',是否下载?\n'+ info.description, [
           {text: '是', onPress: ()=>{this.doUpdate(info)}},
           {text: '否',},
         ]);
-      } else {
-        console.log('应用已是最新版本')
       }
     }).catch(err => {
       Alert.alert('提示', '更新失败.');
     });
-  }
+  };
 
   /* 添加手势响应、 热更新 */
   componentWillMount() {
