@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, TouchableHighlight, Text, PanResponder, StyleSheet, Dimensions } from 'react-native';
 import Sound from 'react-native-sound';
+import { Storage } from './utils'
 import AnimatedView from './components/AnimatedView';
 import { noSpace, canMoveLeft, canMoveRight, canMoveUp, canMoveDown, noBlockHorizontal, noBlockVertical, isGameOver } from "./support";
 
@@ -13,8 +14,15 @@ export default class Main extends Component {
 
   state = {
     score: 0,
+    highScore: 0,
     board: [],
     hasConflicted: []
+  }
+
+  /* 获取最高分 */
+  getHighScore = async ()=> {
+    const highScore = await Storage.get('highScore')
+    highScore && this.setState({highScore})
   }
 
   /* 生成背景格 */
@@ -130,6 +138,7 @@ export default class Main extends Component {
   }
 
   updateBoardView = (score, board, hasConflicted, hasMerged) => {
+    const { highScore } = this.state
     const boardNow = board
     setTimeout(() => {
       if (hasMerged) {
@@ -148,13 +157,26 @@ export default class Main extends Component {
         })
       }
 
-      this.setState({
-        score,
-        board: boardNow,
-        hasConflicted
-      }, () => {
-        this.generateOneNumber()
-      })
+      if (score > highScore) {
+        Storage.set('highScore', `${score}`)
+        this.setState({
+          score,
+          highScore: score,
+          board: boardNow,
+          hasConflicted
+        }, () => {
+          this.generateOneNumber()
+        })
+      } else {
+        this.setState({
+          score,
+          board: boardNow,
+          hasConflicted
+        }, () => {
+          this.generateOneNumber()
+        })
+      }
+
     }, 150)
   }
 
@@ -297,23 +319,34 @@ export default class Main extends Component {
   }
 
   render() {
-    const { score } = this.state
+    const { score, highScore } = this.state
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>2048</Text>
+          <View style={styles.left}>
+            <Text style={styles.title}>2048</Text>
+          </View>
+          <View style={styles.right}>
+            <View style={styles.score}>
+              <Text style={styles.scoreText}>最高分: {highScore}</Text>
+            </View>
+            <View style={styles.score}>
+              <Text style={styles.scoreText}>分数: {score}</Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.newGame}>
           <TouchableHighlight
             underlayColor='#9f8b77'
             onPress={this.newGame}
-            style={styles.newGame}
+            style={styles.btn}
           >
             <Text
-              style={styles.newGameText}
+              style={styles.btnText}
             >
               New Game
             </Text>
           </TouchableHighlight>
-          <Text style={styles.score}>score: {score}</Text>
         </View>
         <View {...this._panResponder.panHandlers} style={styles.content}>
           <View style={styles.panel} ref='container'>
@@ -327,6 +360,7 @@ export default class Main extends Component {
   }
 
   componentDidMount() {
+    this.getHighScore()
     this.newGame()
   }
 }
@@ -338,38 +372,72 @@ const styles = StyleSheet.create({
   },
   /* header部分样式 */
   header: {
-    paddingTop: 30,
+    flexDirection: 'row',
+    padding: 10,
+    paddingTop: 40,
+    flex: 1,
+  },
+  left: {
+    width: 200,
+    height: 150,
+    borderRadius: 20,
+    backgroundColor: '#EEC918',
+    justifyContent: 'center',
     alignItems: 'center'
   },
   title: {
     fontFamily: 'Arial',
     fontWeight: 'bold',
-    fontSize: 60,
+    fontSize: 80,
+    color: '#FFFFFF'
   },
-  newGame: {
-    width: 120,
-    height: 50,
-    backgroundColor: '#8f7a66',
+  right: {
+    flexDirection: 'column',
+    flex: 1,
+    height: 150,
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  score: {
+    width: 180,
+    height: 65,
+    backgroundColor: '#B9ADA0',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 25,
-    marginBottom: 30
   },
-  newGameText: {
+  scoreText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontFamily: 'Arial',
+    fontSize: 24
+  },
+
+  /* 开始游戏按钮样式 */
+  newGame: {
+    height: 100,
+    alignItems: 'center',
+    paddingTop: 10
+  },
+  btn: {
+    width: 180,
+    height: 65,
+    backgroundColor: '#FF9A42',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btnText: {
     fontFamily: 'Arial',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 30,
     color: '#FFFFFF'
   },
-  score: {
-    fontFamily: 'Arial',
-    fontSize: 25
-  },
+
   /* content部分样式 */
   content: {
     padding: 4,
-    marginTop: 50
+    paddingBottom: 20
   },
   panel: {
     position: 'relative',
