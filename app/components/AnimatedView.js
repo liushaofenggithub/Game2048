@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {StyleSheet, Animated, Dimensions, Text } from 'react-native'
-import {getNumBgColor, getNumColor, getPosition} from "../support";
+import {getNumBgColor, getNumColor, getPosition} from "../utils/support";
 
 const gridWidth = (Dimensions.get('window').width - 88) / 4
 

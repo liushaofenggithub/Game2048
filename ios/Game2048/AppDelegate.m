@@ -6,6 +6,7 @@
  */
 
 #import "AppDelegate.h"
+#import "RCTHotUpdate.h"
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -16,7 +17,15 @@
 {
   NSURL *jsCodeLocation;
 
-  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+  #ifdef DEBUG
+    //开发包
+    jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+  #else
+    //离线包
+    //jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"bundle/index.ios.js" withExtension:@"jsbundle"];
+    //热更新
+    jsCodeLocation=[RCTHotUpdate bundleURL];
+  #endif
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"Game2048"
