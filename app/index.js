@@ -156,7 +156,6 @@ export default class Main extends Component {
     setTimeout(() => {
       if (hasMerged) {
         const s = new Sound(move, (e) => {
-          alert(JSON.stringify(e))
           if(e) {
             return;
           }
@@ -164,7 +163,6 @@ export default class Main extends Component {
         })
       } else {
         const s = new Sound(merge, (e) => {
-          alert(JSON.stringify(e))
           if(e) {
             return;
           }
