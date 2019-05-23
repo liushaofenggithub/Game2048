@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, TouchableHighlight, Text, PanResponder, StyleSheet, Dimensions, Platform, Alert, Linking } from 'react-native';
 import Sound from 'react-native-sound';
-import { Storage } from './utils/index'
+import { Storage } from './utils/index';
 import AnimatedView from './components/AnimatedView';
 import { noSpace, canMoveLeft, canMoveRight, canMoveUp, canMoveDown, noBlockHorizontal, noBlockVertical, isGameOver } from "./utils/support";
 import _updateConfig from '../update.json';
@@ -379,24 +379,22 @@ export default class Main extends Component {
             <View style={styles.score}>
               <Text style={styles.scoreText}>最高分: {highScore}</Text>
             </View>
-            <View style={styles.score}>
+            <View style={[styles.score, styles.bottomScore]}>
               <Text style={styles.scoreText}>分数: {score}</Text>
             </View>
           </View>
         </View>
-        <View style={styles.newGame}>
-          <TouchableHighlight
-            underlayColor='#9f8b77'
-            onPress={this.newGame}
-            style={styles.btn}
+        <TouchableHighlight
+          underlayColor='#9f8b77'
+          onPress={this.newGame}
+          style={styles.newGame}
+        >
+          <Text
+            style={styles.newGameText}
           >
-            <Text
-              style={styles.btnText}
-            >
-              New Game
-            </Text>
-          </TouchableHighlight>
-        </View>
+            New Game
+          </Text>
+        </TouchableHighlight>
         <View {...this._panResponder.panHandlers} style={styles.content}>
           <View style={styles.panel} ref='container'>
             {this.setBgGrid()}
@@ -423,12 +421,10 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     padding: 10,
-    paddingTop: 40,
     flex: 1,
   },
   left: {
-    width: 200,
-    height: 150,
+    flex: 1,
     borderRadius: 20,
     backgroundColor: '#EEC918',
     justifyContent: 'center',
@@ -437,23 +433,23 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Arial',
     fontWeight: 'bold',
-    fontSize: 80,
+    fontSize: 60,
     color: '#FFFFFF'
   },
   right: {
+    padding: 5,
     flexDirection: 'column',
-    flex: 1,
-    height: 150,
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    flex: 1
   },
   score: {
-    width: 180,
-    height: 65,
+    flex: 1,
     backgroundColor: '#B9ADA0',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  bottomScore: {
+    marginTop: 15,
   },
   scoreText: {
     color: '#FFFFFF',
@@ -461,22 +457,17 @@ const styles = StyleSheet.create({
     fontFamily: 'Arial',
     fontSize: 24
   },
-
   /* 开始游戏按钮样式 */
   newGame: {
-    height: 100,
-    alignItems: 'center',
-    paddingTop: 10
-  },
-  btn: {
-    width: 180,
-    height: 65,
     backgroundColor: '#FF9A42',
     borderRadius: 10,
-    justifyContent: 'center',
+    marginLeft: 40,
+    marginRight: 40,
     alignItems: 'center',
+    justifyContent: 'center',
+    height: 60,
   },
-  btnText: {
+  newGameText: {
     fontFamily: 'Arial',
     fontWeight: 'bold',
     fontSize: 30,
