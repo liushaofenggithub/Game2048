@@ -5,6 +5,7 @@ import { Storage } from './utils/index';
 import AnimatedView from './components/AnimatedView';
 import { noSpace, canMoveLeft, canMoveRight, canMoveUp, canMoveDown, noBlockHorizontal, noBlockVertical, isGameOver } from "./utils/support";
 import _updateConfig from '../update.json';
+import { createStyles } from "./theme";
 import {
   isFirstTime,
   isRolledBack,
@@ -412,7 +413,7 @@ export default class Main extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = createStyles({
   container: {
     flex: 1,
     backgroundColor: '#FEFCEF'
@@ -472,8 +473,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 30,
     color: '#FFFFFF'
-  },
-
+  }
+}, {
   /* content部分样式 */
   content: {
     padding: 4,
