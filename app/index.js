@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableHighlight, Text, PanResponder, StyleSheet, Dimensions, Platform, Alert, Linking } from 'react-native';
+import { View, StatusBar, TouchableHighlight, Text, PanResponder, Dimensions, Platform, Alert, Linking } from 'react-native';
 import Sound from 'react-native-sound';
 import { Storage } from './utils/index';
 import AnimatedView from './components/AnimatedView';
@@ -376,6 +376,9 @@ export default class Main extends Component {
     const { score, highScore } = this.state
     return (
       <View style={styles.container}>
+        <StatusBar
+          hidden={true}
+        />
         <View style={styles.header}>
           <View style={styles.left}>
             <Text style={styles.title}>2048</Text>
