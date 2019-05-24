@@ -65,11 +65,11 @@ export default class AnimatedView extends Component {
     Animated.parallel([
       Animated.timing(this.state.left,{
         toValue: position.left,
-        duration: 150,
+        duration: 50,
       }),
       Animated.timing(this.state.top,{
         toValue: position.top,
-        duration: 150,
+        duration: 50,
       }),
     ]).start()
   }
@@ -90,7 +90,7 @@ export default class AnimatedView extends Component {
         <Text
           style={[styles.text, {
             color: getNumColor(value),
-            fontSize: value < 1024 ? 0.6 * gridWidth : 0.4 * gridWidth,
+            fontSize: value < 1024 ? 0.5 * gridWidth : 0.4 * gridWidth,
           }]}
         >
             {value}
@@ -102,6 +102,7 @@ export default class AnimatedView extends Component {
 
 const styles = StyleSheet.create({
   grid: {
+    borderRadius: 6,
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center'

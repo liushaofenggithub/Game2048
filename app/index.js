@@ -3,7 +3,7 @@ import { View, TouchableHighlight, Text, PanResponder, StyleSheet, Dimensions, P
 import Sound from 'react-native-sound';
 import { Storage } from './utils/index';
 import AnimatedView from './components/AnimatedView';
-import { noSpace, canMoveLeft, canMoveRight, canMoveUp, canMoveDown, noBlockHorizontal, noBlockVertical, isGameOver } from "./utils/support";
+import { noSpace, noMove, canMoveLeft, canMoveRight, canMoveUp, canMoveDown, noBlockHorizontal, noBlockVertical, isGameOver } from "./utils/support";
 import _updateConfig from '../update.json';
 import { createStyles } from "./theme";
 import {
@@ -135,7 +135,12 @@ export default class Main extends Component {
       }, () => {
         const valCell = this.refs[`val-cell-${randX}-${randY}`]
         valCell.startBoxAnimate(randX, randY)
-        isGameOver(board)
+        if (noSpace(board) && noMove(board)) {
+          Alert.alert('游戏结束', '是否重新开始?', [
+            {text: '是', onPress: ()=>{this.newGame()}},
+            {text: '否',}
+          ])
+        }
       })
     })
   }
@@ -191,7 +196,7 @@ export default class Main extends Component {
         })
       }
 
-    }, 150)
+    }, 60)
   }
 
   moveLeft = () => {
@@ -326,7 +331,6 @@ export default class Main extends Component {
           {text: '确定', onPress: ()=>{info.downloadUrl && Linking.openURL(info.downloadUrl)}},
         ]);
       } else if (info.upToDate) {
-        // Alert.alert('提示', '您的应用版本已是最新.');
       } else {
         Alert.alert('提示', '检查到新的版本'+info.name+',是否下载?\n'+ info.description, [
           {text: '是', onPress: ()=>{this.doUpdate(info)}},
@@ -378,10 +382,12 @@ export default class Main extends Component {
           </View>
           <View style={styles.right}>
             <View style={styles.score}>
-              <Text style={styles.scoreText}>最高分: {highScore}</Text>
+              <Text style={styles.scoreText}>最高得分</Text>
+              <Text style={styles.scoreText}>{highScore}</Text>
             </View>
             <View style={[styles.score, styles.bottomScore]}>
-              <Text style={styles.scoreText}>分数: {score}</Text>
+              <Text style={styles.scoreText}>当前得分</Text>
+              <Text style={styles.scoreText}>{score}</Text>
             </View>
           </View>
         </View>
@@ -456,7 +462,7 @@ const styles = createStyles({
     color: '#FFFFFF',
     fontWeight: 'bold',
     fontFamily: 'Arial',
-    fontSize: 24
+    fontSize: 15
   },
   /* 开始游戏按钮样式 */
   newGame: {

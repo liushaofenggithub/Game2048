@@ -1,3 +1,5 @@
+import {Alert} from "react-native";
+
 const noSpace = (board) => {
   for(let i = 0; i < 4; i++) {
     for(let j = 0; j < 4; j++) {
@@ -14,8 +16,10 @@ const noMove = (board) => {
   return true
 }
 
-const isGameOver = (board) => {
-  if (noSpace(board) && noMove(board)) alert('GAME OVER !')
+const isGameOver = (board, newGame) => {
+  if (noSpace(board) && noMove(board)) {
+    alert('Game Over')
+  }
 }
 
 const getNumColor = (num) => {
@@ -108,4 +112,4 @@ const noBlockVertical = (col, row1, row2, board) => {
   return true
 }
 
-export { noSpace, getNumBgColor, getNumColor, getPosition, canMoveLeft, canMoveRight, canMoveUp, canMoveDown, noBlockHorizontal, noBlockVertical, isGameOver }
+export { noSpace, noMove, getNumBgColor, getNumColor, getPosition, canMoveLeft, canMoveRight, canMoveUp, canMoveDown, noBlockHorizontal, noBlockVertical, isGameOver }
