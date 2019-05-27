@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {StyleSheet, Animated, Text } from 'react-native';
-import {getNumBgColor, getNumColor, getPosition} from "../utils/support";
+import {getNumBgColor, getNumColor, getPosition, getGridText, getFontScale} from "../utils/support";
 import { GRID_WIDTH } from '../theme'
 
 export default class AnimatedView extends Component {
@@ -74,8 +74,10 @@ export default class AnimatedView extends Component {
   }
 
   render() {
-    const { value } = this.props
+    const { value, mode } = this.props
+    const gridText = getGridText(value, mode)
     const { left, top, width, height } = this.state
+    const fontScale = getFontScale(value, mode)
     return (
       <Animated.View
         style={[styles.grid, {
@@ -89,10 +91,10 @@ export default class AnimatedView extends Component {
         <Text
           style={[styles.text, {
             color: getNumColor(value),
-            fontSize: value < 1024 ? 0.5 * GRID_WIDTH : 0.4 * GRID_WIDTH,
+            fontSize: fontScale * GRID_WIDTH,
           }]}
         >
-            {value}
+            {gridText}
           </Text>
       </Animated.View>
     )

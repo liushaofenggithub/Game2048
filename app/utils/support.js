@@ -16,7 +16,7 @@ const noMove = (board) => {
   return true
 }
 
-const isGameOver = (board, newGame) => {
+const isGameOver = (board) => {
   if (noSpace(board) && noMove(board)) {
     alert('Game Over')
   }
@@ -43,6 +43,69 @@ const getNumBgColor = (num) => {
     case 4096: return "#a6c"; break;
     case 8192: return "#93c"; break;
   }
+}
+
+const getGridText = (value, mode) => {
+  if (mode === 0) {
+    return `${value}`
+  } else if (mode === 1) {
+    switch (+value) {
+      case 0: return '群众'; break;
+      case 2: return '列兵'; break;
+      case 4: return '下士'; break;
+      case 8: return '中士'; break;
+      case 16: return '上士'; break;
+      case 32: return '少尉'; break;
+      case 64: return '中尉'; break;
+      case 128: return '上尉'; break;
+      case 256: return '少校'; break;
+      case 512: return '中校'; break;
+      case 1024: return '上校'; break;
+      case 2048: return '少将'; break;
+      case 4096: return '中将'; break;
+      case 8192: return '上将'; break;
+      case 16384: return '元帅'; break;
+    }
+  } else {
+    switch (+value) {
+      case 0: return '胎教'; break;
+      case 2: return '幼儿园'; break;
+      case 4: return '小学'; break;
+      case 8: return '初中'; break;
+      case 16: return '高中'; break;
+      case 32: return '专科'; break;
+      case 64: return '本科'; break;
+      case 128: return '研究生'; break;
+      case 256: return '留学生'; break;
+      case 512: return '博士'; break;
+      case 1024: return '博士后'; break;
+      case 2048: return '研究院'; break;
+      case 4096: return '中科院'; break;
+      case 8192: return '钢铁侠'; break;
+    }
+  }
+}
+
+const getMaxNum = board => {
+  let maxNum = 0
+  board.forEach(item => {
+    item.forEach(innerItem => {
+      if (maxNum < innerItem) {
+        maxNum = innerItem
+      }
+    })
+  })
+  return maxNum
+}
+
+const getFontScale = (value, mode) => {
+  if (mode === 0) {
+    if (value < 1024) {
+      return 0.5
+    }
+    return 0.4
+  }
+  return 0.3
 }
 
 const getPosition = (x, y, gridWidth) => {
@@ -112,4 +175,4 @@ const noBlockVertical = (col, row1, row2, board) => {
   return true
 }
 
-export { noSpace, noMove, getNumBgColor, getNumColor, getPosition, canMoveLeft, canMoveRight, canMoveUp, canMoveDown, noBlockHorizontal, noBlockVertical, isGameOver }
+export { getMaxNum, noSpace, noMove, getNumBgColor, getNumColor, getPosition, canMoveLeft, canMoveRight, canMoveUp, canMoveDown, noBlockHorizontal, noBlockVertical, isGameOver, getGridText, getFontScale }

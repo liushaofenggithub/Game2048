@@ -2,7 +2,18 @@ import React, { Component } from 'react';
 import { View, TouchableHighlight, Text, PanResponder, Alert } from 'react-native';
 import Sound from 'react-native-sound';
 import AnimatedView from '../components/AnimatedView';
-import { noSpace, noMove, canMoveLeft, canMoveRight, canMoveUp, canMoveDown, noBlockHorizontal, noBlockVertical } from "../utils/support";
+import {
+  getMaxNum,
+  noSpace,
+  noMove,
+  canMoveLeft,
+  canMoveRight,
+  canMoveUp,
+  canMoveDown,
+  noBlockHorizontal,
+  noBlockVertical,
+  getGridText
+} from "../utils/support";
 import { Storage } from '../utils/index';
 import { createStyles, SCREEN_WIDTH, GRID_WIDTH } from "../theme/index";
 
@@ -14,14 +25,27 @@ export default class Main extends Component {
   state = {
     score: 0,
     highScore: 0,
+    highMilitaryRank: 0,
+    highEducation: 0,
     board: [],
     hasConflicted: []
   }
 
   /* 获取最高分 */
   getHighScore = async ()=> {
-    const highScore = await Storage.get('highScore')
-    highScore && this.setState({highScore})
+    const { mode } = this.props
+    if (mode === 0) {
+      const highScore = await Storage.get('highScore')
+      highScore && this.setState({highScore})
+    } else if (mode === 1) {
+      const highMilitaryRank = await Storage.get('highMilitaryRank')
+      highMilitaryRank && this.setState({highMilitaryRank})
+    } else {
+      const highEducation = await Storage.get('highEducation')
+      highEducation && this.setState({highEducation})
+    }
+
+
   }
 
   /* 生成背景格 */
@@ -46,6 +70,7 @@ export default class Main extends Component {
   /* 生成有数字的格 */
   setValGrid = ()=> {
     const { board, hasConflicted } = this.state
+    const { mode } = this.props
     if (board.length === 0) return
     return board.map((item, i) => {
       return item.map((innerItem, j) => {
@@ -53,6 +78,7 @@ export default class Main extends Component {
         return <AnimatedView
                   key={`val-cell-${i}-${j}`}
                   ref={`val-cell-${i}-${j}`}
+                  mode={mode}
                   value={innerItem}
                   style={{
                     left: 16 + j * (GRID_WIDTH + 16),
@@ -142,7 +168,8 @@ export default class Main extends Component {
   }
 
   updateBoardView = (score, board, hasConflicted, hasMerged) => {
-    const { highScore } = this.state
+    const { highScore, highMilitaryRank, highEducation } = this.state
+    const { mode } = this.props
     const boardNow = board
     setTimeout(() => {
       if (hasMerged) {
@@ -161,11 +188,33 @@ export default class Main extends Component {
         })
       }
 
-      if (score > highScore) {
+      const maxNum = getMaxNum(board)
+
+      if (mode === 0 && score > highScore) {
         Storage.set('highScore', `${score}`)
         this.setState({
           score,
           highScore: score,
+          board: boardNow,
+          hasConflicted
+        }, () => {
+          this.generateOneNumber()
+        })
+      } else if (mode === 1 && maxNum > highMilitaryRank) {
+        Storage.set('highMilitaryRank', `${maxNum}`)
+        this.setState({
+          score,
+          highMilitaryRank: maxNum,
+          board: boardNow,
+          hasConflicted
+        }, () => {
+          this.generateOneNumber()
+        })
+      } else if (mode === 2 && maxNum > highEducation) {
+        Storage.set('highEducation', `${maxNum}`)
+        this.setState({
+          score,
+          highEducation: maxNum,
           board: boardNow,
           hasConflicted
         }, () => {
@@ -323,35 +372,71 @@ export default class Main extends Component {
   }
 
   render() {
-    const { score, highScore } = this.state
+    const { board, score, highScore, highMilitaryRank, highEducation } = this.state
+    const { mode, toggleModeShow } = this.props
+    const maxNum = getMaxNum(board)
     return (
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.left}>
             <Text style={styles.title}>2048</Text>
+            <Text style={[styles.title, styles.modeText]}>
+              {
+                mode === 0 ? '经典模式' : mode === 1 ? '军旅模式' : '升学模式'
+              }
+            </Text>
           </View>
           <View style={styles.right}>
             <View style={styles.score}>
-              <Text style={styles.scoreText}>最高得分</Text>
-              <Text style={styles.scoreText}>{highScore}</Text>
+              <Text style={styles.scoreText}>
+                {
+                  mode === 0 ? '最高得分' : mode === 1 ? '最高职位' : '最高学历'
+                }
+              </Text>
+              <Text style={styles.scoreText}>
+                {
+                  mode === 0 ? getGridText(highScore, mode) : mode === 1 ? getGridText(highMilitaryRank, mode) : getGridText(highEducation, mode)
+                }
+              </Text>
             </View>
             <View style={[styles.score, styles.bottomScore]}>
-              <Text style={styles.scoreText}>当前得分</Text>
-              <Text style={styles.scoreText}>{score}</Text>
+              <Text style={styles.scoreText}>
+                {
+                  mode === 0 ? '当前得分' : mode === 1 ? '当前职位' : '当前学历'
+                }
+              </Text>
+              <Text style={styles.scoreText}>
+                {
+                  mode === 0 ? getGridText(score, mode) : getGridText(maxNum, mode)
+                }
+               </Text>
             </View>
           </View>
         </View>
-        <TouchableHighlight
-          underlayColor='#9f8b77'
-          onPress={this.newGame}
-          style={styles.newGame}
-        >
-          <Text
-            style={styles.newGameText}
+        <View style={styles.btnContainer}>
+          <TouchableHighlight
+            underlayColor='#9f8b77'
+            onPress={() => {toggleModeShow()}}
+            style={styles.menu}
           >
-            New Game
-          </Text>
-        </TouchableHighlight>
+            <Text
+              style={styles.newGameText}
+            >
+              菜单
+            </Text>
+          </TouchableHighlight>
+          <TouchableHighlight
+            underlayColor='#9f8b77'
+            onPress={this.newGame}
+            style={styles.newGame}
+          >
+            <Text
+              style={styles.newGameText}
+            >
+              New Game
+            </Text>
+          </TouchableHighlight>
+        </View>
         <View {...this._panResponder.panHandlers} style={styles.content}>
           <View style={styles.panel} ref='container'>
             {this.setBgGrid()}
@@ -392,6 +477,10 @@ const styles = createStyles({
     fontSize: 60,
     color: '#FFFFFF'
   },
+  modeText: {
+    fontSize: 20,
+    marginTop: 10
+  },
   right: {
     padding: 5,
     flexDirection: 'column',
@@ -414,11 +503,24 @@ const styles = createStyles({
     fontSize: 15
   },
   /* 开始游戏按钮样式 */
-  newGame: {
+  btnContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10
+  },
+  menu: {
+    width: 100,
+    height: 60,
+    marginRight: 20,
     backgroundColor: '#FF9A42',
     borderRadius: 10,
-    marginLeft: 40,
-    marginRight: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  newGame: {
+    flex: 1,
+    backgroundColor: '#FF9A42',
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
     height: 60,
