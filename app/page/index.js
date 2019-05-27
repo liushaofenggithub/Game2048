@@ -181,7 +181,7 @@ export default class Main extends Component {
         })
       }
 
-    }, 60)
+    }, 85)
   }
 
   moveLeft = () => {
@@ -359,7 +359,6 @@ export default class Main extends Component {
           </View>
         </View>
       </View>
-
     )
   }
 
