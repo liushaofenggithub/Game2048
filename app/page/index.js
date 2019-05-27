@@ -160,6 +160,7 @@ export default class Main extends Component {
     this.init();
     this.generateOneNumber()
     this.generateOneNumber()
+    this.getHighScore()
   }
 
   showMoveAnimation = (fromX, fromY, toX, toY) => {
@@ -342,6 +343,12 @@ export default class Main extends Component {
     this.updateBoardView(score, board, hasConflicted, hasMerged)
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.modeChanged) {
+      this.newGame()
+    }
+  }
+
   /* 添加手势响应 */
   componentWillMount() {
     this._panResponder = PanResponder.create({
@@ -448,7 +455,6 @@ export default class Main extends Component {
   }
 
   componentDidMount() {
-    this.getHighScore()
     this.newGame()
   }
 }
