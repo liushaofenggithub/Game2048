@@ -42,7 +42,7 @@ const Points = Object.freeze({
  适配不同大小的屏幕
  **/
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const GRID_WIDTH = (SCREEN_WIDTH - 8) / 4;
+const GRID_WIDTH = (SCREEN_WIDTH - 88) / 4;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCALE = SCREEN_WIDTH / 375;
 

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import {StyleSheet, Animated, Dimensions, Text } from 'react-native'
+import {StyleSheet, Animated, Text } from 'react-native';
 import {getNumBgColor, getNumColor, getPosition} from "../utils/support";
-
-const gridWidth = (Dimensions.get('window').width - 88) / 4
+import { GRID_WIDTH } from '../theme'
 
 export default class AnimatedView extends Component {
   constructor(props){
@@ -17,16 +16,16 @@ export default class AnimatedView extends Component {
 
   /* 生成新的数字或数字叠加之后格子自身的动画 */
   startBoxAnimate = (x, y) => {
-    const position = getPosition(x, y, gridWidth)
+    const position = getPosition(x, y, GRID_WIDTH)
     const { left, top, width, height } = this.state
     Animated.sequence([
       Animated.parallel([
         Animated.timing(left,{
-          toValue: position.left + gridWidth / 2,
+          toValue: position.left + GRID_WIDTH / 2,
           duration: 0,
         }),
         Animated.timing(top,{
-          toValue: position.top + gridWidth / 2,
+          toValue: position.top + GRID_WIDTH / 2,
           duration: 0,
         }),
         Animated.timing(width,{
@@ -40,20 +39,20 @@ export default class AnimatedView extends Component {
       ]),
       Animated.parallel([
         Animated.timing(width,{
-          toValue: gridWidth,
-          duration: 30,
+          toValue: GRID_WIDTH,
+          duration: 50,
         }),
         Animated.timing(height,{
-          toValue: gridWidth,
-          duration: 30,
+          toValue: GRID_WIDTH,
+          duration: 50,
         }),
         Animated.timing(left,{
           toValue: position.left,
-          duration: 30,
+          duration: 50,
         }),
         Animated.timing(top,{
           toValue: position.top,
-          duration: 30,
+          duration: 50,
         })
       ])
     ]).start()
@@ -61,15 +60,15 @@ export default class AnimatedView extends Component {
 
   /* 格子的移动动画 */
   startMoveAnimate = (toX, toY) => {
-    const position = getPosition(toX, toY, gridWidth)
+    const position = getPosition(toX, toY, GRID_WIDTH)
     Animated.parallel([
       Animated.timing(this.state.left,{
         toValue: position.left,
-        duration: 50,
+        duration: 80,
       }),
       Animated.timing(this.state.top,{
         toValue: position.top,
-        duration: 50,
+        duration: 80,
       }),
     ]).start()
   }
@@ -90,7 +89,7 @@ export default class AnimatedView extends Component {
         <Text
           style={[styles.text, {
             color: getNumColor(value),
-            fontSize: value < 1024 ? 0.5 * gridWidth : 0.4 * gridWidth,
+            fontSize: value < 1024 ? 0.5 * GRID_WIDTH : 0.4 * GRID_WIDTH,
           }]}
         >
             {value}
