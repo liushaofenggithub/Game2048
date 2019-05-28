@@ -5,12 +5,14 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "bundle-ios": "node node_modules/react-native/local-cli/cli.js bundle --entry-file index.js  --platform ios --dev false --bundle-output ./ios/bundle/index.ios.jsbundle --assets-dest ./ios/bundle",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "react": "16.6.1",
     "react-native": "0.57.7",
     "react-native-sound": "^0.10.12",
+    "react-native-splash-screen": "^3.2.0",
     "react-native-update": "^5.1.6"
   },
   "devDependencies": {

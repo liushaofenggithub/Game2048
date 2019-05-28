@@ -6,6 +6,7 @@ import {
   Linking,
   Alert
 } from 'react-native';
+import SplashScreen from 'react-native-splash-screen';
 import {
   isFirstTime,
   isRolledBack,
@@ -109,6 +110,10 @@ export default class Index extends Component {
         </View>
       </View>
     )
+  }
+
+  componentDidMount() {
+    SplashScreen.hide();
   }
 }
 
