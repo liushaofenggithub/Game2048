@@ -26,23 +26,16 @@ export default class Index extends Component {
 
   state = {
     modeShow: true,
-    modeChanged: false,
-    mode: 0 /* 0: 经典模式 1: 军旅模式 2: 升学模式 */
+    mode: -1 /* 0: 经典模式 1: 军旅模式 2: 升学模式 */
   }
 
   setMode = (mode) => {
     if (this.state.mode !== mode) {
       this.setState({
-        mode: mode,
-        modeChanged: true
-      })
-    } else {
-      this.setState({
-        mode: mode,
-        modeChanged: false
+        mode: mode
       })
     }
-    this.toggleModeShow()
+    this.toggleModeShow(this.state.mode === mode)
   }
 
   toggleModeShow = () => {
@@ -95,14 +88,13 @@ export default class Index extends Component {
   }
 
   render() {
-    const { mode, modeShow, modeChanged } = this.state
+    const { mode, modeShow } = this.state
     return (
       <View style={styles.container}>
         <StatusBar
           hidden={true}
         />
         <Main
-          modeChanged={modeChanged}
           mode={mode}
           toggleModeShow={this.toggleModeShow}
         />
@@ -110,7 +102,9 @@ export default class Index extends Component {
           style={modeShow ? styles.modeShow: {}}
         >
           <Mode
+            mode={mode}
             setMode={this.setMode}
+            toggleModeShow={this.toggleModeShow}
           />
         </View>
       </View>

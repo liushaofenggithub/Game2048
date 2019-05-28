@@ -344,7 +344,7 @@ export default class Main extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.modeChanged) {
+    if (this.props.mode !== nextProps.mode) {
       this.newGame()
     }
   }

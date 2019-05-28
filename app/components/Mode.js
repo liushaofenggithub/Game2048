@@ -15,6 +15,17 @@ const Mode = (props) => (
       </Text>
     </View>
     <View>
+      {
+        props.mode === -1 ? <View></View> :
+        <TouchableOpacity
+          onPress={() => {props.setMode(props.mode)}}
+          style={[styles.btn, styles.classicBtn]}
+        >
+          <Text style={styles.text}>
+            继续游戏
+          </Text>
+        </TouchableOpacity>
+      }
       <TouchableOpacity
         onPress={() => {props.setMode(0)}}
         style={[styles.btn, styles.classicBtn]}
@@ -41,6 +52,7 @@ const Mode = (props) => (
       </TouchableOpacity>
     </View>
   </View>
+
 )
 
 const styles = createStyles({
