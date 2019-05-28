@@ -32,8 +32,7 @@ export default class Main extends Component {
   }
 
   /* 获取最高分 */
-  getHighScore = async ()=> {
-    const { mode } = this.props
+  getHighScore = async (mode)=> {
     if (mode === 0) {
       const highScore = await Storage.get('highScore')
       highScore && this.setState({highScore})
@@ -44,8 +43,6 @@ export default class Main extends Component {
       const highEducation = await Storage.get('highEducation')
       highEducation && this.setState({highEducation})
     }
-
-
   }
 
   /* 生成背景格 */
@@ -160,7 +157,6 @@ export default class Main extends Component {
     this.init();
     this.generateOneNumber()
     this.generateOneNumber()
-    this.getHighScore()
   }
 
   showMoveAnimation = (fromX, fromY, toX, toY) => {
@@ -344,6 +340,7 @@ export default class Main extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.getHighScore(nextProps.mode)
     if (this.props.mode !== nextProps.mode) {
       this.newGame()
     }
