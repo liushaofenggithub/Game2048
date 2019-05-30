@@ -1,4 +1,4 @@
-package com.game2048;
+package liushaofeng.game2048;
 
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;
